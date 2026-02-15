@@ -1,18 +1,18 @@
 [
   {
-    "id": "theme_industrial_v1",
+    "id": "theme_1",
     "name": "Industrial Green Pro",
     "version": 1,
     "size_kb": 355
   },
   {
-    "id": "theme_dark_glass",
+    "id": "theme_2",
     "name": "Dark Glass UI",
     "version": 2,
     "size_kb": 410
   },
   {
-    "id": "theme_medical_blue",
+    "id": "theme_3",
     "name": "Medical Blue Standard",
     "version": 1,
     "size_kb": 290
