@@ -1,47 +1,35 @@
-name: Update Theme Manifest
+name: Update Manifest
 
-# تریگر: هر وقت روی برنچ main پوشه themes تغییر کرد
 on:
   push:
-    paths:
-      - 'themes/**'
     branches:
       - main
-  workflow_dispatch: # امکان اجرای دستی دکمه‌ای
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
-    permissions:
-      contents: write  # اجازه نوشتن در ریپازیتوری (برای کامیت کردن فایل json)
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - name: Run Build Script
-      run: python build_manifest.py
+      - name: Run Build Script
+        run: python build_manifest.py
 
-    - name: Commit and Push Manifest
+      - name: Commit and Push Manifest
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          
-          # فایل جدید را به لیست اضافه کن
           git add manifest.json
-          
-          # اگر تغییری نبود، ارور نده و خارج شو
           git diff --staged --quiet || git commit -m "Auto-update manifest.json"
-          
-          # === بخش مهم: هماهنگ‌سازی با سرور ===
-          # اول آخرین تغییرات را می‌گیریم تا با سرور هماهنگ شویم
           git pull --rebase origin main
-          
-          # حالا با خیال راحت Push می‌کنیم
           git push origin main
