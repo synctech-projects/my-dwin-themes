@@ -1,31 +1,38 @@
-name: Update Manifest JSON
+name: Update Theme Manifest
 
+# تریگر: هر وقت روی برنچ main پوشه themes تغییر کرد
 on:
   push:
     paths:
-      - 'themes/**'          # هر وقت تغییری در پوشه themes رخ داد
-      - 'build_manifest.py'  # یا اگر خود اسکریپت عوض شد
+      - 'themes/**'
+    branches:
+      - main
+  workflow_dispatch: # امکان اجرای دستی دکمه‌ای
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
+    permissions:
+      contents: write  # اجازه نوشتن در ریپازیتوری (برای کامیت کردن فایل json)
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.x'
-        
-    - name: Run Manifest Generator
+
+    - name: Run Build Script
       run: python build_manifest.py
-      
-    - name: Commit and Push Manifest
+
+    - name: Commit and Push changes
       run: |
-        git config --global user.name "GitHub Action"
-        git config --global user.email "action@github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add manifest.json
-        # فقط اگر تغییری بود کامیت کن
-        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update manifest.json" && git push)
+        # فقط اگر تغییری بود کامیت کن تا ارور ندهد
+        git commit -m "Auto-update manifest.json" || echo "No changes to commit"
+        git push
