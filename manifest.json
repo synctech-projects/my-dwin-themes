@@ -1,0 +1,16 @@
+[
+  {
+    "id": "Dark Theme",
+    "name": "Dark Theme",
+    "previewUrl": "themes/Dark Theme/preview.png",
+    "downloadUrl": "themes/Dark Theme",
+    "size": "Unknown"
+  },
+  {
+    "id": "Light Theme",
+    "name": "Light Theme",
+    "previewUrl": "themes/Light Theme/preview.png",
+    "downloadUrl": "themes/Light Theme",
+    "size": "Unknown"
+  }
+]
