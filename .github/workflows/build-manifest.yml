@@ -28,11 +28,20 @@ jobs:
     - name: Run Build Script
       run: python build_manifest.py
 
-    - name: Commit and Push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git add manifest.json
-        # فقط اگر تغییری بود کامیت کن تا ارور ندهد
-        git commit -m "Auto-update manifest.json" || echo "No changes to commit"
-        git push
+    - name: Commit and Push Manifest
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # فایل جدید را به لیست اضافه کن
+          git add manifest.json
+          
+          # اگر تغییری نبود، ارور نده و خارج شو
+          git diff --staged --quiet || git commit -m "Auto-update manifest.json"
+          
+          # === بخش مهم: هماهنگ‌سازی با سرور ===
+          # اول آخرین تغییرات را می‌گیریم تا با سرور هماهنگ شویم
+          git pull --rebase origin main
+          
+          # حالا با خیال راحت Push می‌کنیم
+          git push origin main
