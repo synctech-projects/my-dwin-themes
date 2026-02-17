@@ -1,60 +1,77 @@
 import os
 import json
 
-# تنظیمات
+# تنظیمات مسیرها
 THEMES_DIR = 'themes'
 OUTPUT_FILE = 'manifest.json'
-# دامنه پایه برای دسترسی فایل‌ها از طریق jsDelivr (یا گیت‌هاب خام)
-# نکته: اگر در Flutter آدرس پایه را هندل می‌کنی، اینجا مسیر نسبی کافی است.
-# من اینجا مسیر نسبی (Relative Path) می‌سازم تا در Flutter انعطاف‌پذیر باشی.
 
-def generate_manifest():
+# فرمت‌های مجاز فایل‌های DWIN (می‌تونی کم و زیاد کنی)
+VALID_EXTENSIONS = {'.icl', '.jpg', '.bmp', '.fnt', '.bin', '.zk', '.cz', '.txt'}
+
+def get_files_recursively(folder_path):
+    file_list = []
+    total_size = 0
+    
+    # پیمایش تمام زیرپوشه‌ها و فایل‌ها
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            # بررسی فرمت فایل (اختیاری: اگر همه فایل‌ها رو میخوای شرط رو بردار)
+            ext = os.path.splitext(file)[1].lower()
+            if ext in VALID_EXTENSIONS or file == 'preview.png':
+                full_path = os.path.join(root, file)
+                # مسیر نسبی برای ذخیره در جیسون (سازگار با لینوکس و ویندوز)
+                relative_path = full_path.replace('\\', '/')
+                
+                size = os.path.getsize(full_path)
+                total_size += size
+                
+                file_info = {
+                    'name': file,
+                    'path': relative_path,  # مسیر کامل نسبی برای دانلود
+                    'sizeKb': int(size / 1024) if size > 0 else 1
+                }
+                file_list.append(file_info)
+                
+    return file_list, total_size
+
+def build_manifest():
     themes = []
     
-    # بررسی وجود پوشه themes
     if not os.path.exists(THEMES_DIR):
-        print(f"Error: Directory '{THEMES_DIR}' not found.")
+        print(f"Directory {THEMES_DIR} not found.")
         return
 
-    # اسکن پوشه‌ها
-    # ساختار مورد انتظار: themes/theme_name/preview.jpg
-    entries = sorted(os.listdir(THEMES_DIR))
-    
-    for entry in entries:
-        theme_path = os.path.join(THEMES_DIR, entry)
+    # پیمایش پوشه‌های اصلی داخل themes
+    for item in os.listdir(THEMES_DIR):
+        item_path = os.path.join(THEMES_DIR, item)
         
-        # فقط پوشه‌ها را پردازش کن
-        if os.path.isdir(theme_path):
-            theme_id = entry
+        if os.path.isdir(item_path):
+            print(f"Processing theme: {item}")
             
-            # پیدا کردن فایل پریویو (jpg یا png)
-            preview_image = None
-            for ext in ['.jpg', '.jpeg', '.png']:
-                if os.path.exists(os.path.join(theme_path, f"preview{ext}")):
-                    preview_image = f"{THEMES_DIR}/{theme_id}/preview{ext}"
+            # استخراج فایل‌ها و حجم کل
+            files, total_size_bytes = get_files_recursively(item_path)
+            
+            # پیدا کردن آدرس پیش‌نمایش (اگر فایل preview.png داشته باشه)
+            preview_path = None
+            for f in files:
+                if f['name'].lower() == 'preview.png':
+                    preview_path = f['path']
                     break
             
-            # اگر عکس نبود، یک عکس پیش‌فرض یا null بگذار (اینجا رد می‌کنیم)
-            if not preview_image:
-                print(f"Warning: No preview image found for '{theme_id}'. Skipping.")
-                continue
-
-            # ساخت آبجکت تم
-            theme_data = {
-                "id": theme_id,
-                "name": theme_id.replace('_', ' ').title(), # تبدیل theme_01 به Theme 01
-                "previewUrl": preview_image,
-                "downloadUrl": f"{THEMES_DIR}/{theme_id}", # آدرس پوشه برای دانلود فایل‌ها
-                "size": "Unknown" # می‌توان بعداً حجم فایل‌های داخل پوشه را محاسبه کرد
+            theme_obj = {
+                "name": item,
+                "totalSizeKb": int(total_size_bytes / 1024),
+                "preview": preview_path, # کلید مورد انتظار فلاتر
+                "files": files           # کلید حیاتی که قبلاً نبود
             }
             
-            themes.append(theme_data)
+            themes.append(theme_obj)
 
-    # ذخیره فایل manifest.json
+    # ذخیره جیسون نهایی
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
         json.dump(themes, f, indent=2, ensure_ascii=False)
     
-    print(f"✅ Success! Generated manifest.json with {len(themes)} themes.")
+    print(f"Manifest generated with {len(themes)} themes.")
 
-if __name__ == "__main__":
-    generate_manifest()
+if __name__ == '__main__':
+    build_manifest()
