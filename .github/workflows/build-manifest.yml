@@ -1,0 +1,28 @@
+name: Auto Build Theme Manifest
+
+on:
+  push:
+    paths:
+      - 'themes/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build manifest.json
+        run: python scripts/build_manifest.py
+
+      - name: Commit manifest
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "manifest-bot"
+          git config user.email "bot@github"
+          git add manifest.json
+          git commit -m "auto: update theme manifest"
+          git push
