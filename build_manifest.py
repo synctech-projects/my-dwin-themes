@@ -4,84 +4,57 @@ import json
 # تنظیمات
 THEMES_DIR = 'themes'
 OUTPUT_FILE = 'manifest.json'
-GITHUB_USER = 'synctech-projects'
-GITHUB_REPO = 'my-dwin-themes'
-BRANCH = 'main'
-
-def get_file_size_kb(path):
-    return int(os.path.getsize(path) / 1024)
+# دامنه پایه برای دسترسی فایل‌ها از طریق jsDelivr (یا گیت‌هاب خام)
+# نکته: اگر در Flutter آدرس پایه را هندل می‌کنی، اینجا مسیر نسبی کافی است.
+# من اینجا مسیر نسبی (Relative Path) می‌سازم تا در Flutter انعطاف‌پذیر باشی.
 
 def generate_manifest():
-    manifest = {
-        "version": "1.0.0",
-        "themesRoot": THEMES_DIR,
-        "themes": []
-    }
-
-    # بررسی پوشه themes
+    themes = []
+    
+    # بررسی وجود پوشه themes
     if not os.path.exists(THEMES_DIR):
-        print(f"Directory {THEMES_DIR} not found.")
+        print(f"Error: Directory '{THEMES_DIR}' not found.")
         return
 
-    # پیمایش پوشه های تم
-    for theme_name in os.listdir(THEMES_DIR):
-        theme_path = os.path.join(THEMES_DIR, theme_name)
-        
-        if not os.path.isdir(theme_path):
-            continue
-
-        # پیدا کردن فایل پریویو
-        preview_path = None
-        possible_previews = ['preview.png', 'preview.jpg', 'icon.png']
-        for p in possible_previews:
-            if os.path.exists(os.path.join(theme_path, p)):
-                # مسیر باید با / باشد برای وب
-                preview_path = f"{THEMES_DIR}/{theme_name}/{p}"
-                break
-        
-        # لیست کردن فایل‌های داخل تم (مثلاً .icl, .tft, etc)
-        theme_files = []
-        total_size_kb = 0
-        
-        # فرض میکنیم فایل‌ها داخل پوشه Files هستند یا مستقیماً در ریشه تم
-        # اینجا فرض میکنیم فایل های اصلی (مثل 32.icl) در یک زیرپوشه Files هستند
-        # اگر ساختارت فرق دارد این قسمت را تغییر بده
-        files_dir = os.path.join(theme_path, 'Files')
-        search_dir = files_dir if os.path.exists(files_dir) else theme_path
-
-        for root, dirs, files in os.walk(search_dir):
-            for file in files:
-                # نادیده گرفتن فایل‌های سیستمی و پریویو
-                if file.startswith('.') or file in possible_previews:
-                    continue
-                
-                # فقط فایل‌های DWIN را برداریم؟ یا همه؟ فعلاً همه.
-                file_abs_path = os.path.join(root, file)
-                size = get_file_size_kb(file_abs_path)
-                total_size_kb += size
-                
-                # ساخت مسیر نسبی وب
-                rel_path = os.path.relpath(file_abs_path, os.getcwd()).replace("\\", "/")
-                
-                theme_files.append({
-                    "name": file,
-                    "path": rel_path,
-                    "sizeKb": size
-                })
-
-        if theme_files:
-            manifest["themes"].append({
-                "name": theme_name,
-                "preview": preview_path,
-                "files": theme_files,
-                "totalSizeKb": total_size_kb
-            })
-
-    # ذخیره فایل JSON
-    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
-        json.dump(manifest, f, indent=2, ensure_ascii=False)
+    # اسکن پوشه‌ها
+    # ساختار مورد انتظار: themes/theme_name/preview.jpg
+    entries = sorted(os.listdir(THEMES_DIR))
     
-    print(f"Manifest generated with {len(manifest['themes'])} themes.")
+    for entry in entries:
+        theme_path = os.path.join(THEMES_DIR, entry)
+        
+        # فقط پوشه‌ها را پردازش کن
+        if os.path.isdir(theme_path):
+            theme_id = entry
+            
+            # پیدا کردن فایل پریویو (jpg یا png)
+            preview_image = None
+            for ext in ['.jpg', '.jpeg', '.png']:
+                if os.path.exists(os.path.join(theme_path, f"preview{ext}")):
+                    preview_image = f"{THEMES_DIR}/{theme_id}/preview{ext}"
+                    break
+            
+            # اگر عکس نبود، یک عکس پیش‌فرض یا null بگذار (اینجا رد می‌کنیم)
+            if not preview_image:
+                print(f"Warning: No preview image found for '{theme_id}'. Skipping.")
+                continue
+
+            # ساخت آبجکت تم
+            theme_data = {
+                "id": theme_id,
+                "name": theme_id.replace('_', ' ').title(), # تبدیل theme_01 به Theme 01
+                "previewUrl": preview_image,
+                "downloadUrl": f"{THEMES_DIR}/{theme_id}", # آدرس پوشه برای دانلود فایل‌ها
+                "size": "Unknown" # می‌توان بعداً حجم فایل‌های داخل پوشه را محاسبه کرد
+            }
+            
+            themes.append(theme_data)
+
+    # ذخیره فایل manifest.json
+    with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+        json.dump(themes, f, indent=2, ensure_ascii=False)
+    
+    print(f"✅ Success! Generated manifest.json with {len(themes)} themes.")
 
 if __name__ == "__main__":
     generate_manifest()
