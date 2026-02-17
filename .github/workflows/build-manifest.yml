@@ -1,28 +1,31 @@
-name: Auto Build Theme Manifest
+name: Update Manifest JSON
 
 on:
   push:
     paths:
-      - 'themes/**'
+      - 'themes/**'          # هر وقت تغییری در پوشه themes رخ داد
+      - 'build_manifest.py'  # یا اگر خود اسکریپت عوض شد
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Build manifest.json
-        run: python scripts/build_manifest.py
-
-      - name: Commit manifest
-        run: |
-          if git diff --quiet; then
-            echo "No changes"
-            exit 0
-          fi
-          git config user.name "manifest-bot"
-          git config user.email "bot@github"
-          git add manifest.json
-          git commit -m "auto: update theme manifest"
-          git push
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Run Manifest Generator
+      run: python build_manifest.py
+      
+    - name: Commit and Push Manifest
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add manifest.json
+        # فقط اگر تغییری بود کامیت کن
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update manifest.json" && git push)
