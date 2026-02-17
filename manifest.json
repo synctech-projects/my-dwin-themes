@@ -1,16 +1,41 @@
 [
   {
-    "id": "Dark Theme",
     "name": "Dark Theme",
-    "previewUrl": "themes/Dark Theme/preview.png",
-    "downloadUrl": "themes/Dark Theme",
-    "size": "Unknown"
+    "totalSizeKb": 1004,
+    "preview": "themes/Dark Theme/preview.png",
+    "files": [
+      {
+        "name": "preview.png",
+        "path": "themes/Dark Theme/preview.png",
+        "sizeKb": 293
+      },
+      {
+        "name": "32.icl",
+        "path": "themes/Dark Theme/Files/32.icl",
+        "sizeKb": 355
+      },
+      {
+        "name": "32 - Copy.icl",
+        "path": "themes/Dark Theme/Files/32 - Copy.icl",
+        "sizeKb": 355
+      }
+    ]
   },
   {
-    "id": "Light Theme",
     "name": "Light Theme",
-    "previewUrl": "themes/Light Theme/preview.png",
-    "downloadUrl": "themes/Light Theme",
-    "size": "Unknown"
+    "totalSizeKb": 475,
+    "preview": "themes/Light Theme/preview.png",
+    "files": [
+      {
+        "name": "preview.png",
+        "path": "themes/Light Theme/preview.png",
+        "sizeKb": 119
+      },
+      {
+        "name": "32.icl",
+        "path": "themes/Light Theme/Files/32.icl",
+        "sizeKb": 355
+      }
+    ]
   }
 ]
