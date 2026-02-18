@@ -1,6 +1,6 @@
-#name: Update Manifest
+name: Update Manifest
 
-#on:
+on:
   push:
     branches:
       - main
@@ -9,7 +9,7 @@
 permissions:
   contents: write
 
-#jobs:
+jobs:
   build:
     runs-on: ubuntu-latest
 
@@ -22,6 +22,9 @@ permissions:
         with:
           python-version: '3.x'
 
+      - name: Pull latest changes
+        run: git pull origin main
+
       - name: Run Build Script
         run: python build_manifest.py
 
@@ -31,5 +34,4 @@ permissions:
           git config --global user.email "action@github.com"
           git add manifest.json
           git diff --staged --quiet || git commit -m "Auto-update manifest.json"
-          git pull --rebase origin main
           git push origin main
