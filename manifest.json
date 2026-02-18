@@ -1,25 +1,28 @@
-[
-  {
-    "id": "Blue Theme",
-    "name": "Blue Theme",
-    "preview": "themes/Blue Theme/preview.png",
-    "totalSizeKb": 1004,
-    "files": [
-      {
-        "name": "preview.png",
-        "path": "themes/Blue Theme/preview.png",
-        "sizeKb": 293.45
-      },
-      {
-        "name": "32.icl",
-        "path": "themes/Blue Theme/Files/32.icl",
-        "sizeKb": 355.41
-      },
-      {
-        "name": "32 - Copy.icl",
-        "path": "themes/Blue Theme/Files/32 - Copy.icl",
-        "sizeKb": 355.41
-      }
-    ]
-  }
-]
+{
+  "version": 1,
+  "themes": [
+    {
+      "id": "blue",
+      "name": "Blue Theme",
+      "preview": "themes/Blue Theme/preview.png",
+      "totalSizeKb": 1004,
+      "files": [
+        {
+          "name": "preview.png",
+          "path": "themes/Blue Theme/preview.png",
+          "sizeKb": 293.45
+        },
+        {
+          "name": "32.icl",
+          "path": "themes/Blue Theme/Files/32.icl",
+          "sizeKb": 355.41
+        },
+        {
+          "name": "32 - Copy.icl",
+          "path": "themes/Blue Theme/Files/32 - Copy.icl",
+          "sizeKb": 355.41
+        }
+      ]
+    }
+  ]
+}
