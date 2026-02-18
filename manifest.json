@@ -23,6 +23,24 @@
     ]
   },
   {
+    "id": "Glass Theme",
+    "name": "Glass Theme",
+    "preview": "themes/Glass Theme/preview.png",
+    "totalSizeKb": 475,
+    "files": [
+      {
+        "name": "preview.png",
+        "path": "themes/Glass Theme/preview.png",
+        "sizeKb": 119.6
+      },
+      {
+        "name": "32.icl",
+        "path": "themes/Glass Theme/Files/32.icl",
+        "sizeKb": 355.41
+      }
+    ]
+  },
+  {
     "id": "Light Theme",
     "name": "Light Theme",
     "preview": "themes/Light Theme/preview.png",
