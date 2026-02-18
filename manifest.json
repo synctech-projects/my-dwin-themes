@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "themes": [
     {
       "id": "blue_theme",
@@ -43,24 +43,6 @@
         {
           "name": "32 - Copy.icl",
           "path": "themes/Dark Theme/Files/32 - Copy.icl",
-          "sizeKb": 355.41
-        }
-      ]
-    },
-    {
-      "id": "glass_theme",
-      "name": "Glass Theme",
-      "preview": "themes/Glass Theme/preview.png",
-      "totalSizeKb": 475,
-      "files": [
-        {
-          "name": "preview.png",
-          "path": "themes/Glass Theme/preview.png",
-          "sizeKb": 119.6
-        },
-        {
-          "name": "32.icl",
-          "path": "themes/Glass Theme/Files/32.icl",
           "sizeKb": 355.41
         }
       ]
