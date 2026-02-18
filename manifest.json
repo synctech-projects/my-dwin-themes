@@ -1,28 +1,5 @@
 [
   {
-    "id": "Dark Theme",
-    "name": "Dark Theme",
-    "preview": "themes/Dark Theme/preview.png",
-    "totalSizeKb": 1004,
-    "files": [
-      {
-        "name": "preview.png",
-        "path": "themes/Dark Theme/preview.png",
-        "sizeKb": 293.45
-      },
-      {
-        "name": "32.icl",
-        "path": "themes/Dark Theme/Files/32.icl",
-        "sizeKb": 355.41
-      },
-      {
-        "name": "32 - Copy.icl",
-        "path": "themes/Dark Theme/Files/32 - Copy.icl",
-        "sizeKb": 355.41
-      }
-    ]
-  },
-  {
     "id": "Blue Theme",
     "name": "Blue Theme",
     "preview": "themes/Blue Theme/preview.png",
