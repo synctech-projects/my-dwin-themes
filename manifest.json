@@ -1,6 +1,4 @@
-{
-  "version": 2,
-  "themes":[
+[
   {
     "id": "Blue Theme",
     "name": "Blue Theme",
@@ -43,4 +41,3 @@
     ]
   }
 ]
-}
