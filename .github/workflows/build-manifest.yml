@@ -1,6 +1,6 @@
-name: Update Manifest
+#name: Update Manifest
 
-on:
+#on:
   push:
     branches:
       - main
@@ -9,7 +9,7 @@ on:
 permissions:
   contents: write
 
-jobs:
+#jobs:
   build:
     runs-on: ubuntu-latest
 
